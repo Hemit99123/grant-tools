@@ -1,0 +1,32 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
+}
+
+model Grant {
+    id          String    @id @default(auto()) @map("_id") @db.ObjectId
+    title       String
+    amount      Int
+    description String
+    criteria    String
+    endDate     DateTime
+    available   Boolean   @default(true)
+    assignedTo  String    @default("")
+    Uploads     Uploads[]
+}
+
+model Uploads {
+    id      String @id @default(auto()) @map("_id") @db.ObjectId
+    userId  String
+    url     String
+    name    String
+    grant   Grant  @relation(fields: [grantId], references: [id])
+    grantId String @db.ObjectId
+}
